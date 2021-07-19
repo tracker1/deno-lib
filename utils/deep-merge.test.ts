@@ -1,14 +1,11 @@
 import {
-  assert,
-  assertArrayIncludes,
   assertEquals,
-  assertNotEquals,
   assertNotStrictEquals,
   assertObjectMatch,
   assertStrictEquals,
 } from "https://deno​.land/std@0.101.0/testing/asserts.ts";
 
-import { deepMerge, sortObject } from "./deep-merge.ts";
+import { deepMerge } from "./deep-merge.ts";
 
 Deno.test({
   name: "[utils/deep-merge] - will deep merge objects",
@@ -126,33 +123,5 @@ Deno.test({
     const r = deepMerge(a, b);
     assertEquals(r, exp);
     assertNotStrictEquals(r, exp);
-  },
-});
-
-Deno.test({
-  name: "[utils/deep-merge] - sortObject will return primatives as-is",
-  fn: () => {
-    assertStrictEquals(sortObject(0), 0);
-  },
-});
-
-Deno.test({
-  name: "[utils/deep-merge] - sortObject will map arrays",
-  fn: () => {
-    const a = {
-      length: 1,
-      map: () => 1234,
-    };
-    assertStrictEquals(sortObject(a), 1234);
-  },
-});
-
-Deno.test({
-  name: "[utils/deep-merge] - sortObject will clone dates",
-  fn: () => {
-    const d1 = new Date();
-    const d2 = sortObject(d1);
-    assertEquals(d1, d2);
-    assertNotStrictEquals(d1, d2);
   },
 });

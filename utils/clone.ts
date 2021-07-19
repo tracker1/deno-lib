@@ -1,8 +1,12 @@
-// Based on https://www.npmjs.com/package/fclone
-// removed Buffer support
-
 import { isArrayLike } from "./is-array-like.ts";
 
+/**
+ * Will create a cloned copy of the input object.
+ *
+ * @param input Object to Clone
+ * @param refs Circular reference lookup table (optional)
+ * @returns Clone of original input.
+ */
 export function clone<T>(input: T, refs?: T[]): T {
   const obj: any = input;
   if (!obj || "object" !== typeof obj) return obj;
@@ -23,17 +27,8 @@ export function clone<T>(input: T, refs?: T[]): T {
   if (!refs) refs = [];
 
   if (isArrayLike(obj)) {
-    refs[refs.length] = obj;
-    let l = obj.length;
-    let i = -1;
-    let copy: any = [];
-
-    while (l > ++i) {
-      copy[i] = ~refs.indexOf(obj[i]) ? "[Circular]" : clone(obj[i], refs);
-    }
-
-    refs.length && refs.length--;
-    return copy;
+    const ret: any = Array.from(obj);
+    return ret;
   }
 
   refs[refs.length] = obj;
