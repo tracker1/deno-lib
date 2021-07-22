@@ -13,7 +13,7 @@ async function main(skip: boolean): Promise<void> {
   switch (true) {
     case argv.help:
     case argv["?"]:
-    case argv._.length != 2:
+    case argv?._?.length != 2:
       console.log(helpText);
       return;
   }
