@@ -1,0 +1,10 @@
+{
+  "feature": {
+    "env2": "environment 2",
+    "feature1": "target",
+    "feature2": "default"
+  },
+  "option": {
+    "option1": "default"
+  }
+}
