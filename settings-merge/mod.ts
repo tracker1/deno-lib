@@ -1,24 +1,10 @@
-import { path } from "./deps.ts";
-import { helpText } from "./consts.ts";
+import { helpText } from "./feature/consts.ts";
+
+import { isDirectory } from "../utils/is-directory.ts";
 
 const checkDir = async ([name, dirPath]: string[]): Promise<string | void> => {
-  const p = path.resolve(Deno.cwd(), dirPath);
-  const err = `${name} '${p} is not a directory.`;
-  try {
-    const s = await Deno.stat(p);
-    if (!s.isDirectory) {
-      return err;
-    }
-  } catch (error) {
-    if (error instanceof Deno.errors.NotFound) {
-      // file or directory does not exist
-      return err;
-    } else {
-      // unexpected error, maybe permissions, pass it along
-      // throw error;
-      console.error(error);
-    }
-  }
+  if (await isDirectory(dirPath)) return;
+  return `${name} '${dirPath} is not a directory.`;
 };
 
 const checkDirs = async (dirs: Record<string, string>): Promise<boolean> => {
@@ -31,7 +17,13 @@ const checkDirs = async (dirs: Record<string, string>): Promise<boolean> => {
   return false;
 };
 
-export async function configMerge(
+/**
+ * Process the input settings directory and output build to another path
+ * @param {string} inputDirectory Path to the settings directory to process
+ * @param {*} outputDirectory Path to output the transformed configuration
+ * @return {Promise}
+ */
+export async function settingsMerge(
   inputDirectory: string,
   outputDirectory: string,
 ): Promise<void> {

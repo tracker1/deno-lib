@@ -1,9 +1,9 @@
 #!/usr/bin/env -S deno run --allow-read=./ --allow-write=./ --
 
-import { parseFlags } from "./deps.ts";
+import { parseFlags } from "../deps.ts";
 
-import { helpText } from "./consts.ts";
-import { configMerge } from "./mod.ts";
+import { helpText } from "./feature/consts.ts";
+import { settingsMerge } from "./mod.ts";
 
 async function main(skip: boolean): Promise<void> {
   if (skip) return;
@@ -20,7 +20,7 @@ async function main(skip: boolean): Promise<void> {
 
   const [inputDirectory, outputDirectory]: any = argv._;
   console.log(`PROCESSING: ${inputDirectory} ${outputDirectory}`);
-  await configMerge(inputDirectory, outputDirectory);
+  await settingsMerge(inputDirectory, outputDirectory);
 }
 
 main(!import.meta.main).catch((error) => {
