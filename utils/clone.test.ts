@@ -8,7 +8,7 @@ import {
   assertStrictEquals,
 } from "https://deno​.land/std@0.101.0/testing/asserts.ts";
 
-import { clone } from "./clone.ts";
+import { clone, undefinedValue } from "./clone.ts";
 
 const getComplexInput = (): any => {
   var a: any = {};
@@ -120,6 +120,25 @@ Deno.test({
     assertStrictEquals(output.c.a, undefined);
     assertObjectMatch(output.c.b, { a: "[Circular]", b: "[Circular]", x: 2 });
     assertEquals(output.c.c, "[Circular]");
+    assertEquals(output.c.x, 3);
+  },
+});
+
+Deno.test({
+  name: "[utils/clone] - Custom circularValue replacement",
+  fn: () => {
+    const input: any = getComplexInput();
+    const output: any = clone(input, undefinedValue);
+    console.log({ input, output });
+
+    assertEquals(output.a, undefined);
+    assertEquals(output.b.a, undefined);
+    assertEquals(output.b.b, undefined);
+    assertEquals(output.b.x, 2);
+    assertEquals(output.x, 1);
+    assertStrictEquals(output.c.a, undefined);
+    assertObjectMatch(output.c.b, { x: 2 });
+    assertEquals(output.c.c, undefined);
     assertEquals(output.c.x, 3);
   },
 });
