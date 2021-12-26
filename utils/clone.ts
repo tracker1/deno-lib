@@ -7,7 +7,7 @@ import { isArrayLike } from "./is-array-like.ts";
  * @param refs Circular reference lookup table (optional)
  * @returns Clone of original input.
  */
-export function clone<T>(input: T, refs?: T[]): T {
+export function clone<T>(input: T, refs?: T[], replacement: "[Circular]"): T {
   const obj: any = input;
   if (!obj || "object" !== typeof obj) return obj;
 
@@ -27,7 +27,7 @@ export function clone<T>(input: T, refs?: T[]): T {
   if (!refs) refs = [];
 
   if (isArrayLike(obj)) {
-    const ret: any = Array.from(obj);
+    const ret: any = Array.from(obj).map(v => v === undefined ? null : v);
     return ret;
   }
 
@@ -45,7 +45,10 @@ export function clone<T>(input: T, refs?: T[]): T {
 
   while (l--) {
     let k = keys[l];
-    copy[k] = ~refs.indexOf(obj[k]) ? "[Circular]" : clone(obj[k], refs);
+    const v = ~refs.indexOf(obj[k]) ? replacement : clone(obj[k], refs, replacement);
+    if (v !== undefined) {
+      copy[k] = v;
+    }
   }
 
   refs.length && refs.length--;
